@@ -1,26 +1,25 @@
-//Function to find the next greater element for each element of the array.
-vector<long long> nextLargerElement(vector<long long> arr, int n){
-    stack<long long> s;
-    s.push(0);
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
         
-    vector<long long> ans(n);
-        
-    for(int i = 1; i < n; i++){
-        if(arr[i] <= arr[s.top()]) // smaller elements or equal elements can be pushed over the top of the stack.
-            s.push(i); 
-        else{
-            while(!s.empty() && arr[i] > arr[s.top()]){ // if you get the element which is greater then the top of the stack then we got our next greater element for that index(top).
-                ans[s.top()] = arr[i]; // now update the answer and pop it out from the stack.
+        int n = nums.size();
+        stack<int> s;
+        vector<int> ans(n);
+
+        for(int i = 2*n-1; i >= 0; i--){
+
+            while(!s.empty() && s.top() <= nums[i%n])
                 s.pop();
-            }
-            s.push(i); //push the current index
+            
+            if(i < n)
+                if(!s.empty())
+                    ans[i%n] = s.top();
+                else
+                    ans[i%n] = -1;
+            
+            s.push(nums[i%n]);
+
         }
+        return ans;
     }
-        
-    while(!s.empty()){ // now whatever (indices) are left in the stack that would be filled with -1. Because there does not exist any NGE.
-        ans[s.top()] = -1;
-        s.pop();
-    }
-        
-    return ans;
-}
+};
